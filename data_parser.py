@@ -11,6 +11,7 @@
 
 import json
 import csv
+import os
 
 
 def pars_from_json_to_csv(raw_path, process_path):
@@ -73,11 +74,17 @@ def input_person_info_2(process_path):
                 csv_file.writerow(row)
 
 
+
+
 def main():
-    test_path = "K:\\TMS\\6_hw\\data\\raw\\test_1.json"
-    process_path = "K:\\TMS\\6_hw\\data\\process\\test_1.csv"
-    input_person_info(test_path)
-    input_person_info_2(process_path)
+
+    dirname = os.path.dirname(__file__)
+    print(dirname)
+    print(__file__)
+    test_path = os.path.join(dirname, "data\\raw\\test_1.json")
+    process_path = os.path.join(dirname, "data\\process\\test_1.csv")
+    #input_person_info(test_path)
+    #input_person_info_2(process_path)
     pars_from_json_to_csv(raw_path=test_path, process_path=process_path)
 
 
