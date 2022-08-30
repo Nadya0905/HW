@@ -6,7 +6,8 @@
 # 5. Функция которая выведет вам данные про одного человека, которого вы запросите по имени
 # 6. Функция фильтра по языку - вывести всех сотрудников, у которых среди языков программирования есть тот, который вы запрашиваете. Например, вы запросили Python, вам вывелся список сотрудников, которые используют Python.
 # 7. Функция фильтра по росту - среди всех сотрудников, у которых год рождения меньше заданного посчитать средний рост
-# 8. Программа должна представлять собой пользовательское меню с предложением выбрать какое-то действие или выйти из программы. Выбрали действие - выполнилось - предложили выполнить еще какое-то действие или выйти из программы. И так до бесконечности)
+# 8. Программа должна представлять собой пользовательское меню с предложением выбрать какое-то действие или выйти из программы.
+# Выбрали действие - выполнилось - предложили выполнить еще какое-то действие или выйти из программы. И так до бесконечности)
 
 
 import json
@@ -73,18 +74,101 @@ def input_person_info_2(process_path):
             for row in csv_rows:
                 csv_file.writerow(row)
 
+def person_info(test_path):
 
+    with open(test_path, "r", encoding="utf-8") as raw_file:
+        data = json.loads(raw_file.read())
+        for i in data:
+            if i["name"] == "Maria Ivanova":
+                print(i["name"])
+
+def languages_info(test_path):
+
+    with open(test_path, "r", encoding="utf-8") as raw_file:
+        data = json.loads(raw_file.read())
+        input_language = input("")
+        for h in data:
+            languages = h.get("languages")
+            name = h.get("name")
+            if input_language in languages:
+                print(name)
+
+
+def height_info(test_path):
+
+    with open(test_path, "r", encoding="utf-8") as raw_file:
+        data = json.loads(raw_file.read())
+        person_counter = 0
+        sum_height = 0
+        for item in data:
+            birthday = item.get("birthday")
+            year = int(birthday[-4:])
+            height = int(item.get("height"))
+            if year < 1999:
+                person_counter += 1
+                sum_height += height
+        avg_height = sum_height/person_counter
+        print(avg_height)
 
 
 def main():
+
+    menu_message = """
+        Hi there, for starting an app you need to select one of available option:
+ 
+        1 - Function to save data to csv file
+        2 - Function to add data to json file
+        3 - Function to add data to csv
+        4 - Data about one person, whom you request by name
+        5 - Languages filter function
+        6 - Height filter function
+        7 - Exit
+
+        """
+
+    application_switcher = True
+
+    while application_switcher:
+
+        test_path = os.path.join("data\\raw\\test_1.json")
+        process_path = os.path.join("data\\process\\test_1.csv")
+
+        print(menu_message)
+
+        try:
+            client_option = int(input("please, input number:"))
+
+        except Exception as e:
+            print("incorrect number, please, try again")
+            continue
+
+        if client_option == 1:
+            pars_from_json_to_csv(raw_path=test_path, process_path=process_path)
+        elif client_option == 2:
+            input_person_info(raw_path=test_path)
+        elif client_option == 3:
+            input_person_info_2(process_path=process_path)
+        elif client_option == 4:
+            person_info(test_path=test_path)
+        elif client_option == 5:
+            languages_info(test_path=test_path)
+        elif client_option == 6:
+            height_info(test_path=test_path)
+        elif client_option == 7:
+            application_switcher = False
+
+        else:
+            print("this option isn't available")
+            continue
 
     dirname = os.path.dirname(__file__)
     print(dirname)
     print(__file__)
     test_path = os.path.join(dirname, "data\\raw\\test_1.json")
     process_path = os.path.join(dirname, "data\\process\\test_1.csv")
-    #input_person_info(test_path)
-    #input_person_info_2(process_path)
+    person_info(test_path)
+    languages_info(test_path)
+    height_info(test_path)
     pars_from_json_to_csv(raw_path=test_path, process_path=process_path)
 
 
